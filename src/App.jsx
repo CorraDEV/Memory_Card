@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import Card from './components/Card'
+import catsList from './catsList'
+import './styles/App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {  
+  const [score, setScore] = useState(0)
+  const [bestScore, setBestScore] = useState(0)
+  const [cardList, setCardList] = useState(catsList)
+  const [playerList, setPlayerList] = useState([])
+
+  console.log(cardList)
+
+  useEffect(() => {
+    if(score > bestScore){
+      setBestScore(score);
+    }
+    const cardListRandomized = [...cardList];
+    setCardList(cardListRandomized.sort(() => Math.random() - 0.5));
+  }, [score]);     
+
+  const handleCard = (evt) => {
+    if(playerList.find(ele => ele.id === evt.target.parentElement.id)){
+      setScore(0);
+      setPlayerList([]);
+    }
+    else{
+      setScore(score + 1);
+      setPlayerList([...playerList, evt.target.parentElement]);
+    }
+  };  
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Memory Card</h1>
+      <div className='scoreBoard'>
+        <span>score: {score}</span><span>best score: {bestScore}</span>
+      </div>      
+      <div className = 'box'>
+        {cardList.map(ele => <Card cardClass = 'card' key = {ele.id} cardId = {ele.id} name = {ele.breeds[0].name} 
+        imgUrl = {ele.url} onHandleCard = {handleCard} ></Card>)}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
-
-export default App

@@ -1,0 +1,29 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+}
+
+.card{
+  width: 180px;
+  height: 200px;
+}
+
+.box{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.scoreBoard{
+  display: flex;
+  gap: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
