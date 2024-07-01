@@ -1,22 +1,28 @@
 import { useState, useEffect } from 'react'
 import Card from './components/Card'
-import catsList from './catsList'
 import './styles/App.css'
+import getCatsList from './getCatsList';
 
-export default function App() {  
+export default function App() {        
   const [score, setScore] = useState(0)
   const [bestScore, setBestScore] = useState(0)
-  const [cardList, setCardList] = useState(catsList)
-  const [playerList, setPlayerList] = useState([])
+  const [cardList, setCardList] = useState(null)
+  const [playerList, setPlayerList] = useState([])     
 
-  console.log(cardList)
+  useEffect(() => {
+    getCatsList().then(catsList => {      
+      setCardList(catsList);            
+    });        
+  }, []);    
 
   useEffect(() => {
     if(score > bestScore){
       setBestScore(score);
     }
-    const cardListRandomized = [...cardList];
-    setCardList(cardListRandomized.sort(() => Math.random() - 0.5));
+    if(cardList){
+      const cardListRandomized = [...cardList];
+      setCardList(cardListRandomized.sort(() => Math.random() - 0.5));
+    }    
   }, [score]);     
 
   const handleCard = (evt) => {
@@ -29,9 +35,13 @@ export default function App() {
       setPlayerList([...playerList, evt.target.parentElement]);
     }
   };  
-
+    
   return (
-    <>
+    (!cardList)
+    ?
+    <h2>...Loading</h2>
+    :
+    <>      
       <h1>Memory Card</h1>
       <div className='scoreBoard'>
         <span>score: {score}</span><span>best score: {bestScore}</span>
